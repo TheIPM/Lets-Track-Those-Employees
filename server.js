@@ -139,49 +139,48 @@ async function main() {
         ]);
         console.log(`Role '${title}' added successfully.`);
         break;
-      case 'addEmployee':
-        while (true) {
-          const [roleRowsForEmployee] = await connection.execute('SELECT id, title FROM role');
-          const [managerRowsForEmployee] = await connection.execute(
-            'SELECT id, first_name, last_name FROM employee WHERE manager_id IS NULL'
-          );
-          const { first_name, last_name, role_id, manager_id, goBack } = await inquirer.prompt([
-            {
-              type: 'input',
-              name: 'first_name',
-              message: 'Enter the first name of the employee:'
-            },
-            {
-              type: 'input',
-              name: 'last_name',
-              message: 'Enter the last name of the employee:'
-            },
-            {
-              type: 'list',
-              name: 'role_id',
-              message: 'Select the role for the employee:',
-              choices: roleRowsForEmployee.map(role => ({ name: role.title, value: role.id }))
-            },
-            {
-              type: 'list',
-              name: 'manager_id',
-              message: 'Select the manager for the employee:',
-              choices: [...managerRowsForEmployee.map(manager => ({ name: `${manager.first_name} ${manager.last_name}`, value: manager.id })), { name: 'None', value: null }]
-            },
-            goBackPrompt,
-          ]);
-    
-          if (goBack === 'Go back') {
-            break;
-          } else if (goBack === 'Return to main menu') {
-            running = false;
-            break;
+        case 'addEmployee':
+          let addEmployeeRunning = true;
+          while (addEmployeeRunning) {
+            const [roleRowsForEmployee] = await connection.execute('SELECT id, title FROM role');
+            const [managerRowsForEmployee] = await connection.execute(
+              'SELECT id, first_name, last_name FROM employee WHERE manager_id IS NULL'
+            );
+            const { first_name, last_name, role_id, manager_id, goBack } = await inquirer.prompt([
+              {
+                type: 'input',
+                name: 'first_name',
+                message: 'Enter the first name of the employee:',
+              },
+              {
+                type: 'input',
+                name: 'last_name',
+                message: 'Enter the last name of the employee:',
+              },
+              {
+                type: 'list',
+                name: 'role_id',
+                message: 'Select the role for the employee:',
+                choices: roleRowsForEmployee.map(role => ({ name: role.title, value: role.id }))
+              },
+              {
+                type: 'list',
+                name: 'manager_id',
+                message: 'Select the manager for the employee:',
+                choices: [...managerRowsForEmployee.map(manager => ({ name: `${manager.first_name} ${manager.last_name}`, value: manager.id })), { name: 'None', value: null }]
+              },
+              goBackPrompt,
+            ]);
+        
+            if (goBack === 'Return to main menu') {
+              addEmployeeRunning = false; // to break out of the loop i need this otherwise it goes back to this loop not the overarching loop
+            } else {
+              await connection.execute('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [first_name, last_name, role_id, manager_id]);
+              console.log(`Employee '${first_name} ${last_name}' added successfully.`);
+            }
           }
-    
-          await connection.execute('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [first_name, last_name, role_id, manager_id]);
-          console.log(`Employee '${first_name} ${last_name}' added successfully.`);
-        }
-        break;
+          break;
+        
       case 'updateEmployeeRole':
         const [employeeRowsForUpdate] = await connection.execute('SELECT id, CONCAT(first_name, " ", last_name) AS name FROM employee');
         const [roleRowsForUpdate] = await connection.execute('SELECT id, title FROM role');

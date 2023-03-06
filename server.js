@@ -60,6 +60,11 @@ app.put('/employees/:id', async (req, res) => {
 });
 
 async function main() {
+  console.log("***********************************")
+  console.log("*    Let's Track Those Pesky      *")
+  console.log("*        EMPLOYEES!               *")
+  console.log("*                                 *")
+  console.log("*********************************\n")
   let running = true;
   
   while (running) {
@@ -139,18 +144,18 @@ async function main() {
         ]);
         console.log(`Role '${title}' added successfully.`);
         break;
-        case 'addEmployee':
-  let addEmployeeRunning = true;
-  while (addEmployeeRunning) {
-    const [roleRowsForEmployee] = await connection.execute('SELECT id, title FROM role');
-    const [managerRowsForEmployee] = await connection.execute(
-      'SELECT id, first_name, last_name FROM employee WHERE manager_id IS NULL'
+      case 'addEmployee':
+          let addEmployeeRunning = true;
+          while (addEmployeeRunning) {
+          const [roleRowsForEmployee] = await connection.execute('SELECT id, title FROM role');
+          const [managerRowsForEmployee] = await connection.execute(
+          'SELECT id, first_name, last_name FROM employee WHERE manager_id IS NULL'
     );
-    const { first_name, last_name, role_id, manager_id } = await inquirer.prompt([
+           const { first_name, last_name, role_id, manager_id } = await inquirer.prompt([
       {
-        type: 'input',
-        name: 'first_name',
-        message: 'Enter the first name of the employee:',
+           type: 'input',
+           name: 'first_name',
+          message: 'Enter the first name of the employee:',
       },
       {
         type: 'input',

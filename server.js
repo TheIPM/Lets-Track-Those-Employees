@@ -34,30 +34,7 @@ app.get('/employees', async (req, res) => {
   res.json(rows);
 });
 
-app.post('/departments', async (req, res) => {
-  const { name } = req.body;
-  const [result] = await connection.query('INSERT INTO department (name) VALUES (?)', [name]);
-  res.json({ id: result.insertId });
-});
 
-app.post('/roles', async (req, res) => {
-  const { title, salary, department_id } = req.body;
-  const [result] = await connection.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', [title, salary, department_id]);
-  res.json({ id: result.insertId });
-});
-
-app.post('/employees', async (req, res) => {
-  const { first_name, last_name, role_id, manager_id } = req.body;
-  const [result] = await connection.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)', [first_name, last_name, role_id, manager_id]);
-  res.json({ id: result.insertId });
-});
-
-app.put('/employees/:id', async (req, res) => {
-  const { id } = req.params;
-  const { role_id } = req.body;
-  await connection.query('UPDATE employee SET role_id = ? WHERE id = ?', [role_id, id]);
-  res.sendStatus(204);
-});
 
 async function main() {
   console.log("***********************************")

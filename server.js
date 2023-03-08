@@ -8,7 +8,7 @@ app.use(express.json());
 const connection = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: '4anp488K.',
+  password: '',
   database: 'company_db',
 });
 
@@ -209,6 +209,12 @@ async function main() {
           console.error(`Invalid action: ${action}`);
           break;
       }
+    }
+    
+    if (!running) {
+      await connection.end();
+      console.log("Goodbye!");
+      return;
     }
   
     await connection.end();

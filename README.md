@@ -4,6 +4,8 @@
 
 This is Module 12 of my bootcamp, in this project using node, inquirer and MYSQL I have developed an employee tracker. This application allows a user to not only view employees, view departments and view roles in a company but also add roles, departments and employees to an existing database using inquirer.  
 
+Here is a link to the demo video: https://drive.google.com/file/d/1zT-jD-oqUyCWyrJ3B95LJLGxRjYw8M8N/view?usp=sharing
+
 
 ## Table of Contents 
 
